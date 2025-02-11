@@ -1,0 +1,1 @@
+console.log("Este es el js de productos");

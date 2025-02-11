@@ -1,0 +1,117 @@
+:root {
+    --bs-primary: #EBE0CB;
+    --bs-primary-rgb: 235, 224, 203;
+    --bs-success: #1B7A59;
+    --bs-success-rgb: 27, 122, 89;
+    --bs-primary-text-emphasis: #000;
+    --bs-border-color: #505050;
+}
+
+.text-bg-primary {
+    color: #000000 !important;
+}
+
+body {
+    transition: background-color 0.1s, color 0.1s;
+}
+
+#sidebarToggle {
+    color: #000000 !important;
+}
+
+#sidebarToggle:hover {
+    background-color: #eeeeee !important;
+}
+
+
+.sidebar {
+    height: 100vh;
+    width: 20vw;
+    position: fixed;
+    top: 0;
+    left: -20vw;
+    transition: all 0.1s;
+    padding-top: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    padding: 12.5px;
+    text-decoration: none;
+    font-size: 1.2em;
+    display: block;
+}
+.modulos{
+    margin-bottom: 2.5rem;
+}
+.sidebar-link {
+    color: #000000;
+    text-decoration: none;
+    font-size: 1.2em;
+    display: block;
+}
+
+.sidebar-link-active {
+    background-color: #eee;
+}
+
+.sidebar-link:hover {
+    background-color: #eeeeee;
+}
+
+.sidebar-theme {
+    color: #000000 !important;
+}
+
+.sidebar-theme:hover {
+    background-color: #eeeeee !important;
+}
+
+.sidebar-active {
+    left: 0;
+}
+.sidebar-footer {
+    margin-bottom: 0;
+}
+.main-content {
+    transition: margin-left 0.1s;
+}
+
+.main-content.sidebar-active {
+    margin-left: 20vw;
+}
+
+@media (max-width: 768px) {
+    .main-content.sidebar-active {
+        margin-left: 0;
+    }
+    .sidebar {
+        width: 40vw;
+        z-index: 1050;
+        left: -40vw;
+    }
+    .sidebar-active {
+        left: 0;
+        z-index: 1050;
+    }
+    .sidebar-backdrop {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1049;
+    }
+}
+
+.navbar .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+th, td {
+    max-width: 20vw;
+}
