@@ -46,12 +46,12 @@ public class RESTusuarios {
         String out = null;
         Usuario usuario = null; 
         System.out.println("Casi llegaste");
-        ControllerUsuario cu = null;
+        ControllerUsuario cu = new ControllerUsuario();
         Gson gson = new Gson();
         System.out.println(datosUsuario);
+        
         try{
             usuario = gson.fromJson(datosUsuario, Usuario.class);
-            cu = new ControllerUsuario();
             String contra = DigestUtils.md5Hex(usuario.getContrasenia());
             usuario.setContrasenia(contra);
             if(usuario.getIdUsuario()< 1){
@@ -87,6 +87,137 @@ public class RESTusuarios {
         }
         return Response.status(Response.Status.OK).entity(out).build();
     }
+    
+    @Path("login")
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public Response login(@FormParam("datosUsuario")
+    @DefaultValue("") String datosUsuario) {
+        String out = null;
+        ControllerUsuario cu = new ControllerUsuario();
+        Usuario usuario = null; 
+        //System.out.println("Casi llegaste");
+        Gson gson = new Gson();
+        //System.out.println(datosUsuario);
+
+        try {
+            // Llamar a la función checkUser en el controlador
+            usuario = gson.fromJson(datosUsuario, Usuario.class);
+            String contra = DigestUtils.md5Hex(usuario.getContrasenia());
+            usuario.setContrasenia(contra);
+            String token = cu.login(usuario);
+            System.out.println(token);
+            // Si se generó un token, devolverlo en la respuesta JSON
+            if (token != null) {
+                out = """
+                  {"token": "%s", "contrasenia": "%s"}
+                  """;
+                out = String.format(out,token, contra);
+                System.out.println("si se genro token");
+            } else {
+                out = """
+                  {"error": "No se pudo autenticar al usuario o usuario no encontrado."}
+                  """;
+                System.out.println("No se genro token");
+            }
+        } catch (JsonParseException e){
+            out = """
+                  {"error": "Formato de datos no valido."}
+                  """;
+            e.printStackTrace();
+        } catch (Exception e){
+            out = """
+                  {"error": "Error interno del servidor. Intenta mas tarde."}
+                  """;
+            e.printStackTrace();
+        }
+        return Response.status(Response.Status.OK).entity(out).build();
+    }
+    @Path("checkToken")
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public Response checkToken(@FormParam("datosUsuario")
+    @DefaultValue("") String datosUsuario) {
+        String out = null;
+        ControllerUsuario cu = new ControllerUsuario();
+        Usuario usuario = null; 
+        //System.out.println("Casi llegaste");
+        Gson gson = new Gson();
+        //System.out.println(datosUsuario);
+
+        try {
+            // Llamar a la función checkUser en el controlador
+            usuario = gson.fromJson(datosUsuario, Usuario.class);
+            boolean isToken = cu.checkToken(usuario);
+            //System.out.println(isToken);
+            // Si se generó un token, devolverlo en la respuesta JSON
+            if (isToken) {
+                out = """
+                  {"token": "%s", "isToken": %b}
+                  """;
+                out = String.format(out,usuario.getToken(), isToken);
+                System.out.println("si se genro token");
+            } else {
+                out = """
+                  {"error": "No se pudo autenticar el token.",  "isToken": %b}
+                  """;
+                //System.out.println("No se genro token");
+                out = String.format(out, isToken);
+            }
+        } catch (JsonParseException e){
+            out = """
+                  {"error": "Formato de datos no valido."}
+                  """;
+            e.printStackTrace();
+        } catch (Exception e){
+            out = """
+                  {"error": "Error interno del servidor. Intenta mas tarde."}
+                  """;
+            e.printStackTrace();
+        }
+        return Response.status(Response.Status.OK).entity(out).build();
+    }
+
+    @Path("logout")
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public Response logout(@FormParam("datosUsuario") @DefaultValue("") String datosUsuario) {
+        String out = null;
+        Usuario usuario = null;
+        ControllerUsuario cu = new ControllerUsuario();
+        Gson gson = new Gson();
+
+        try {
+            usuario = gson.fromJson(datosUsuario, Usuario.class);
+            // Llamar a la función checkUser en el controlador
+            String lastToken = cu.logout(usuario);
+
+            // Si se generó un token, devolverlo en la respuesta JSON
+            if (lastToken != null) {
+                out = """
+                  {"lastToken": "%s"}
+                  """;
+                out = String.format(out,lastToken);
+            } else {
+                out = """
+                  {"token": "", "error": "usuario no encontrado."}
+                  """;
+            }
+        } catch (JsonParseException e){
+            out = """
+                  {"error": "Formato de datos no valido."}
+                  """;
+            e.printStackTrace();
+        } catch (Exception e){
+            out = """
+                  {"error": "Error interno del servidor. Intenta mas tarde."}
+                  """;
+            e.printStackTrace();
+        }
+        return Response.status(Response.Status.OK).entity(out).build();
+    }
+
+    
     @Path("delete")
     @Produces(MediaType.APPLICATION_JSON)
     @POST

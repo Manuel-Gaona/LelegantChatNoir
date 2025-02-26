@@ -2,6 +2,13 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/D:/workspace/LelegantChatNoir/LelegantChatNoirREST/web/modulos/usuario/index.html</file>
+            <file>file:/D:/workspace/LelegantChatNoir/LelegantChatNoirREST/web/js/modulo/empleados/ControllerEmpleados.js</file>
+            <file>file:/D:/workspace/LelegantChatNoir/LelegantChatNoirREST/web/modulos/usuario/ControllerUsuario.js</file>
+            <file>file:/D:/workspace/LelegantChatNoir/LelegantChatNoirREST/web/modulos/empleados/index.html</file>
+            <file>file:/D:/workspace/LelegantChatNoir/LelegantChatNoirREST/web/js/modulo/login/login.js</file>
+            <file>file:/D:/workspace/LelegantChatNoir/LelegantChatNoirREST/src/java/org/utl/dsm/lelegantchatnoir/rest/RESTusuarios.java</file>
+        </group>
     </open-files>
 </project-private>

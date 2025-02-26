@@ -323,6 +323,35 @@ const cargarModalAgregar = () => {
         });
     })
 };
+// funcion para cerrar sesión
+const cerrarSesion = () => {
+    event.preventDefault();
+
+    const user = localStorage.getItem('usuario');   
+    const usuario = {
+        usuario: user
+    };
+    // convertir los datos a un formato valido para el servicio
+    let queryString = {
+        datosUsuario: JSON.stringify(usuario)
+    }
+    fetch('http://localhost:8080/api/usuario/logout', {
+        method: 'POST',
+        headers: {
+            // se especifica el tipo de contenido en la peticion
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        // se envia la variable con el formato valido
+        body: new URLSearchParams(queryString)
+    })
+    .then(response => response.json())
+    .then(data => {
+        // se imprimo la respuesta del servicio
+        console.log(data);
+        localStorage.clear();
+        window.location.href = '/';
+    })
+}
 
 // se obtiene el boton de cerrar modal usando el id btnCerrarModal
 const btnCerrarModal = document.getElementById('btnCerrarModal');
@@ -336,16 +365,64 @@ btnCerrarModal.addEventListener('click', (event) => {
     tituloModal.innerHTML = "";
     // se limpia el contenido del modal
     contenidoModal.innerHTML = "";
-})
+});
+const cargarDatosUsuario = () => {
+   const titulo = document.getElementById('titulo');
+   const user = localStorage.getItem('usuario');
+   const token = localStorage.getItem('token');
+   const pass = localStorage.getItem('pass');
+   
+   titulo.innerHTML = 'Usuario:' + user + '<br>Contrasenia: ' + pass + '<br>Token: ' + token;
+}
+const verificarToken = () => {
+    event.preventDefault();
+
+    const user = localStorage.getItem('usuario');   
+    const token = localStorage.getItem('token')
+    const usuario = {
+        usuario: user,
+        token: token
+    };
+    // convertir los datos a un formato valido para el servicio
+    let queryString = {
+        datosUsuario: JSON.stringify(usuario)
+    }
+    fetch('http://localhost:8080/api/usuario/checkToken', {
+        method: 'POST',
+        headers: {
+            // se especifica el tipo de contenido en la peticion
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        // se envia la variable con el formato valido
+        body: new URLSearchParams(queryString)
+    })
+    .then(response => response.json())
+    .then(data => {
+        // se imprimo la respuesta del servicio
+        console.log(data);
+        if(!data.isToken){
+           localStorage.clear();
+           window.location.href = '/';
+        }
+        
+    })
+}
 // se espera a que el contenido del documento se haya cargado
 document.addEventListener('DOMContentLoaded', () => {
     // se llama a la función controllerVentas para cargar la tabla de ventas
+    verificarToken();
     cargarTabla();
+    cargarDatosUsuario();
     // se obtiene el boton agregar
     const btnAgregar = document.getElementById('btnAgregar');
     btnAgregar.addEventListener('click', (event) => {
         // se llama a la función cargarModalAgregar para cargar el modal de agregar venta
         cargarModalAgregar();
-    })
+    });
+    const btnCerrarSesion = document.getElementById('btnCerrarSesion');
+    btnCerrarSesion.addEventListener('click', (e) =>{
+        console.log('click en cerrarSesion?')
+        cerrarSesion();
+    });
     console.log('El DOM ha sido cargado');
 });

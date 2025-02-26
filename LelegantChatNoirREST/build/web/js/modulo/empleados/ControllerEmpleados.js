@@ -359,26 +359,26 @@ const cargarModalAgregar = () => {
             // se envía el objeto empleado en formato
             body: new URLSearchParams(queryString)
         })
-                .then(res => res.json())
-                .then(data => {
-                    // se imprime en consola la respuesta de la API
-                    console.log(data);
-                    // se limpia el contenido del modal
-                    btnCerrarModal.click();
-                    // se llama a la función para cargar la tabla de empleados
-                    cargarTablaEmpleados();
-                    // se obtiene el tema de la página usando el atributo data-bs-theme del elemento html
-                    let theme = document.documentElement.getAttribute('data-bs-theme');
-                    let isDarkMode = theme === 'dark';
-                    // se muestra un mensaje de confirmación del empleado agregado
-                    Swal.fire({
-                        title: "Empleado agregado correctamente!",
-                        text: "El empleado con código " + data.codigoEmpleado + " fue agregado correctamente.",
-                        background: isDarkMode ? '#333' : '#fff',
-                        color: isDarkMode ? '#fff' : '#000',
-                        icon: "success"
-                    });
-                });
+        .then(res => res.json())
+        .then(data => {
+            // se imprime en consola la respuesta de la API
+            console.log(data);
+            // se limpia el contenido del modal
+            btnCerrarModal.click();
+            // se llama a la función para cargar la tabla de empleados
+            cargarTablaEmpleados();
+            // se obtiene el tema de la página usando el atributo data-bs-theme del elemento html
+            let theme = document.documentElement.getAttribute('data-bs-theme');
+            let isDarkMode = theme === 'dark';
+            // se muestra un mensaje de confirmación del empleado agregado
+            Swal.fire({
+                title: "Empleado agregado correctamente!",
+                text: "El empleado con código " + data.codigoEmpleado + " fue agregado correctamente.",
+                background: isDarkMode ? '#333' : '#fff',
+                color: isDarkMode ? '#fff' : '#000',
+                icon: "success"
+            });
+        });
     });
 };
 
@@ -396,8 +396,42 @@ btnCerrarModal.addEventListener('click', () => {
     contenidoModal.innerHTML = "";
 });
 
+const verificarToken = () => {
+    event.preventDefault();
+
+    const user = localStorage.getItem('usuario');   
+    const token = localStorage.getItem('token')
+    const usuario = {
+        usuario: user,
+        token: token
+    };
+    // convertir los datos a un formato valido para el servicio
+    let queryString = {
+        datosUsuario: JSON.stringify(usuario)
+    }
+    fetch('http://localhost:8080/api/usuario/checkToken', {
+        method: 'POST',
+        headers: {
+            // se especifica el tipo de contenido en la peticion
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        // se envia la variable con el formato valido
+        body: new URLSearchParams(queryString)
+    })
+    .then(response => response.json())
+    .then(data => {
+        // se imprimo la respuesta del servicio
+        console.log(data);
+        if(!data.isToken){
+           localStorage.clear();
+           window.location.href = '/';
+        }
+        
+    })
+}
 // se espera a que el contenido del documento se haya cargado
 document.addEventListener('DOMContentLoaded', () => {
+    verificarToken();
     // se llama a la función para cargar la tabla de empleados
     cargarTablaEmpleados();
     // se obtiene el botón agregar

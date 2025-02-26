@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.utl.dsm.lelegantchatnoir.model.Usuario;
 import org.utl.dsm.lelegantchatnoir.controller.ControllerLogin;
+import org.utl.dsm.lelegantchatnoir.controller.ControllerUsuario;
 
 @Path("login")
 public class RESTusuario {
@@ -24,13 +25,14 @@ public class RESTusuario {
         
         try {
             model = gson.fromJson(jsonDatos, Usuario.class);
+            System.out.println(model);
             controller = new ControllerLogin();
             String contra = DigestUtils.md5Hex(model.getContrasenia());
             model.setContrasenia(contra);
             Usuario loggedUser = controller.login(model);
-            
             if (loggedUser != null) {
-                out = "{ \"status\":true, \"message\":\"Bienvenido\" }";
+                String token = controller.chekUsers(model);
+                out = "{ \"status\":true, \"message\":\"Bienvenido\", \"token\":\"" + "\"}";
             } else {
                 out = "{ \"status\":false, \"message\":\"Usuario u/o Contraseña son incorrectos\" }";
             }
